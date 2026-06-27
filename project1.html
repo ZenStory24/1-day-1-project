@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="1 hari 1 project(project: notebook)">
+    <meta name="author" content="rifqi">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NoteBook</title>
+    <style>
+      body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(120deg, #b195ff 0%, #95e2ff 100%);
+  background-attachment: fixed;
+}
+
+.hidden {
+    display: none;
+}
+
+h1, p {
+  color: white;
+}
+
+img {
+  width: 50px;
+  height: auto;
+}
+
+#main-slide {
+  position: absolute;
+  margin: 30px;
+}
+#gtau {
+  height: 50px;
+  width: 150px;
+  display: flex;
+  align-items: center;
+}
+
+#wadah-note {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+gap: 150px;
+margin-top: 20px;
+}
+.note-card {
+background-color: #55d7ff82;
+padding: 15px;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+border-left: 5px solid #2aecfff7;
+width: 210px;
+margin: 10px;
+}
+.note-card h3 {
+margin-top: 0;
+color: #333;
+}
+
+
+
+#btn-create1 {
+  position: relative;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #15fff5;
+  border: none;
+  border-radius: 50px;
+  animation: glow-pulse 1.5s infinite alternate;
+}
+
+
+@keyframes glow-pulse {
+  0% {
+    box-shadow: 0 0 1px #03e9f4, 0 0 1px #03e9f4, 0 0 30px #03e9f4;
+  }
+  100% {
+    box-shadow: 0 0 20px #03e9f4, 0 0 35px #03e9f4, 0 0 50px #03e9f4;
+  }
+}
+
+
+#input-title-slide {
+  position: absolute;
+  margin: 30px;
+}
+
+  
+input {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  color: #fff;
+  padding: 12px 20px;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #fff;
+}
+button {
+  background-color: #55ffff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+
+#input-note-slide {
+  position: absolute;
+  margin: 30px;
+}
+
+#notebook-container {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+}
+#notebook-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 40px;
+  width: 20px;
+  height: 100%;
+  border-left: 3px dotted #bbb;
+  border-right: 3px dotted #bbb;
+  z-index: 0;
+}
+textarea {
+  width: 100%;
+  height: 400px;
+  box-sizing: border-box;
+  padding: 20px 20px 20px 70px;
+  background-color: #fffaf0;
+  background-image: linear-gradient(to bottom, #dcdcdc 1px, transparent 1px);
+  background-size: 100% 30px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  boxshadow: 0 4px 6px rgba(0,0,0,0.1);
+  resize: none;
+  color: #4a4a4a;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+  line-height: 30px;
+  outline: none;
+  overflow-y: auto;
+  z-index: 1;
+  position: relative;
+}
+    </style>
+</head>
+<body>
+
+    <!-- main slide -->
+    
+    <div id='main-slide'>
+        <div id='gtau'>
+          
+          <img src='https://i.imgur.com/cMyEPFi.png'>
+          <h1 id='apalah'>Notes</h1>
+        </div>
+        <button id='btn-create1'>Create Notes</button>
+        <div id='wadah-note'></div>
+        
+    </div>
+    
+    <!-- main slide -->
+    
+    
+    
+    
+    <!-- input title slide -->
+    
+    <div id='input-title-slide' class='hidden'>
+        <input id='input-title' type='text' placeholder='Add the title'>
+        <button id='btn-create2'>Create</button>
+    </div>
+    
+    <!-- input title slide -->
+    
+    
+    
+    
+    <!-- input note slide -->
+    
+    <div id='input-note-slide' class='hidden'>
+        <button id='btn-back'>Back</button>
+        <button id='btn-edit' class='hidden'>Edit</button>
+        <button id='btn-save'>Save</button>
+        <h1 id='title'></h1>
+        <div id='notebook-container'>
+          <textarea id='text-area' placeholder='Start write here...'></textarea>
+        </div>
+        
+    </div>
+    
+    <!-- input note slide -->
+    
+    <script>
+      let mainSlide = document.getElementById('main-slide');
+let titleSlide = document.getElementById('input-title-slide');
+let noteSlide = document.getElementById('input-note-slide');
+let btn1 = document.getElementById('btn-create1');
+let btn2 = document.getElementById('btn-create2');
+let btnBack = document.getElementById('btn-back');
+let btnSave = document.getElementById('btn-save');
+let btnEdit = document.getElementById('btn-edit');
+let inputTitle = document.getElementById('input-title');
+let title = document.getElementById('title');
+let textArea = document.getElementById('text-area');
+let noteContainer = document.getElementById('wadah-note')
+
+let noteContent = [];
+let indexCurrentlyBeingEdited = null;
+
+
+const addMainSlide = () => {
+    titleSlide.classList.add('hidden');
+    noteSlide.classList.add('hidden');
+    mainSlide.classList.remove('hidden');
+}
+
+const addTitleSlide = () => {
+    titleSlide.classList.remove('hidden');
+    mainSlide.classList.add('hidden');
+}
+
+const addInputSlide = () => {
+    titleSlide.classList.add('hidden');
+    noteSlide.classList.remove('hidden');
+    mainSlide.classList.add('hidden');
+}
+
+const swapToReadOnly = () => {
+    btnSave.classList.add('hidden');
+    btnEdit.classList.remove('hidden');
+    textArea.readOnly = true;
+}
+
+const swapToEdit = () => {
+    btnSave.classList.remove('hidden');
+    btnEdit.classList.add('hidden');
+    textArea.readOnly = false;
+}
+
+const clearInput = () => {
+    inputTitle.value = '';
+    textArea.value = '';
+}
+
+
+
+btn1.addEventListener('click', function() {
+    addTitleSlide();
+    indexCurrentlyBeingEdited = null;
+});
+
+btn2.addEventListener('click', function() {
+    let titleValue = inputTitle.value.trim();
+    if (titleValue === '') {
+        alert('Please fill in the title input');
+    } else {
+        addInputSlide();
+        title.innerHTML = inputTitle.value;
+    }
+});
+
+btnSave.addEventListener('click', function() {
+    if (indexCurrentlyBeingEdited !== null) {
+        noteContent[indexCurrentlyBeingEdited].isi = textArea.value;
+    } else {
+        let newNote = {
+            judul: inputTitle.value,
+            isi: textArea.value
+        };
+        noteContent.push(newNote);
+    }
+    swapToReadOnly();
+});
+
+btnEdit.addEventListener('click', function() {
+    swapToEdit();
+});
+
+btnBack.addEventListener('click', function() {
+    addMainSlide();
+    swapToEdit();
+    renderNote();
+    clearInput();
+    renderNote();
+});
+
+function openNote(indeks) {
+    let noteChanged = noteContent[indeks]
+    swapToReadOnly();
+    addInputSlide();
+    indexCurrentlyBeingEdited = indeks;
+    title.innerHTML = noteChanged.judul;
+    textArea.value = noteChanged.isi;
+}
+
+function renderNote() {
+    noteContainer.innerHTML = '';
+    let HTMLContainer = '';
+    for (let i = 0; i < noteContent.length; i++) {
+        let note = noteContent[i];
+        HTMLContainer += ` <div class="note-card" onclick='openNote(${i})'> <h3>${note.judul}</h3> <p>${note.isi}</p> </div> `;
+    }
+     noteContainer.innerHTML = HTMLContainer;
+}
+    </script>
+</body>
+</html>
+ 
