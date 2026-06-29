@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="1 hari 1 project(project: kalkulator digital)">
+    <meta name="author" content="rifqi">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Kalkulator</title>
+    <style>
+      * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+
+.kalkulator {
+    background-color: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    width: 350px;
+}
+
+
+.layar-kontainer {
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: right;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    word-break: break-all;
+}
+
+
+#layar-proses {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+
+#layar-hasil {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #212529;
+    margin-top: 5px;
+}
+
+
+.papan-tombol {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 12px;       
+}
+
+
+button {
+    font-size: 1.3rem;
+    padding: 18px 0;
+    border: none;
+    border-radius: 16px;
+    background-color: #e9ecef;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    width: calc(25% - 9px); 
+}
+
+
+button:hover {
+    background-color: #dee2e6;
+}
+
+
+button:active {
+    transform: scale(0.95);
+}
+
+
+.papan-tombol button:first-child {
+    width: calc(50% - 6px); 
+}
+
+
+.btn-aksi {
+    background-color: #ffe3e3;
+    color: #fa5252;
+}
+
+.btn-aksi:hover {
+    background-color: #ffc9c9;
+}
+
+
+.btn-operator {
+    background-color: #fff4e6;
+    color: #fd7e14;
+}
+
+.btn-operator:hover {
+    background-color: #ffe8cc;
+}
+
+
+.btn-SamaDengan {
+    background-color: #e7f5ff;
+    color: #228be6;
+}
+
+.btn-SamaDengan:hover {
+    background-color: #d0ebff;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="kalkulator">
+      <div class="layar-kontainer">
+        <div id="layar-proses">0</div>
+        <div id="layar-hasil"></div>
+      </div>
+      
+      <div class="papan-tombol">
+        <button class="btn-aksi" onclick="clearLayar()">C</button>
+        <button class="btn-aksi" onclick="hapusSatu()">DEL</button>
+        <button class="btn-operator" onclick="inputOperator('/')">÷</button>
+
+        <button onclick="inputAngka('7')">7</button>
+        <button onclick="inputAngka('8')">8</button>
+        <button onclick="inputAngka('9')">9</button>
+        <button class="btn-operator" onclick="inputOperator('*')">×</button>
+
+        <button onclick="inputAngka('4')">4</button>
+        <button onclick="inputAngka('5')">5</button>
+        <button onclick="inputAngka('6')">6</button>
+        <button class="btn-operator" onclick="inputOperator('-')">-</button>
+
+        <button onclick="inputAngka('1')">1</button>
+        <button onclick="inputAngka('2')">2</button>
+        <button onclick="inputAngka('3')">3</button>
+        <button class="btn-operator" onclick="inputOperator('+')">+</button>
+
+        <button onclick="togglePositifNegatif()">±</button>
+        <button onclick="inputAngka('0')">0</button>
+        <button onclick="inputKoma('.')">.</button>
+        <button class="btn-SamaDengan" onclick="hitungHasil()">=</button>
+     </div>
+  </div>
+  
+  
+  
+  <script>
+    let layarProses = document.getElementById('layar-proses');
+let memoriOperasi = '0';
+
+
+function inputAngka(angka) {
+  if (memoriOperasi === '0') {
+    memoriOperasi = angka;
+    layarProses.innerHTML = memoriOperasi;
+  } else {
+    memoriOperasi += angka;
+    layarProses.innerHTML = memoriOperasi;
+  }
+}
+
+function inputOperator(operator) {
+  if (memoriOperasi === '0') {
+    alert('Input tidak valid');
+  } else if (memoriOperasi.slice(-1) === '+' || memoriOperasi.slice(-1) === '-' || memoriOperasi.slice(-1) === '*' || memoriOperasi.slice(-1) === '/') {
+    memoriOperasi = memoriOperasi.slice(0, -1);
+    memoriOperasi += operator;
+    layarProses.innerHTML = memoriOperasi;
+  } else {
+    memoriOperasi += operator;
+    layarProses.innerHTML = memoriOperasi;
+  }
+}
+
+function hitungHasil() {
+  let hasil = eval(memoriOperasi);
+  layarProses.innerHTML = hasil;
+}
+
+function clearLayar() {
+  memoriOperasi = '0';
+  layarProses.innerHTML = memoriOperasi;
+}
+
+function hapusSatu() {
+  memoriOperasi = memoriOperasi.slice(0, -1);
+  layarProses.innerHTML = memoriOperasi;
+}
+
+function inputKoma(koma) {
+  if (memoriOperasi[memoriOperasi.length - 1] === '*' || memoriOperasi[memoriOperasi.length - 1] === '+' || memoriOperasi[memoriOperasi.length - 1] === '-' || memoriOperasi[memoriOperasi.length - 1] === '/') {
+    memoriOperasi += '0.';
+    layarProses.innerHTML = memoriOperasi;
+  } else {
+    memoriOperasi += koma;
+    layarProses.innerHTML = memoriOperasi;
+  }
+}
+
+function togglePositifNegatif() {
+   if (memoriOperasi === '0') {
+    memoriOperasi = '-';
+    layarProses.innerHTML = memoriOperasi;
+  } else {
+    memoriOperasi += '-';
+    layarProses.innerHTML = memoriOperasi;
+  }
+}
+
+window.onerror = function(message, source, lineno, colno, error) {
+alert("Terjadi Eror pada Web: " + message);
+return true;
+};
+
+console.log('semoga author bisa beli laptop');
+console.log('semoga author bisa juara LKS!');
+  </script>
+</body>
+</html>
