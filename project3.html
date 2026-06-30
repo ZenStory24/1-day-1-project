@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="1 day 1 project(project: weather app)">
+    <meta name="description" content="">
     <meta name="author" content="rifqi">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Weather app(prototype)</title>
@@ -21,12 +21,13 @@
   height: 500px;
 }
 
-.icon-container {
+#icon-container {
   position: relative;
   width: 100px;
   height: 100px;
-  left: 110px;
-  bottom: 434px;
+  left: 90px;
+  bottom: 270px;
+  display: block;
 }
 
 .searc {
@@ -61,7 +62,7 @@ input {
   padding: 14px 18px;
   background-color: #f3f4f6;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 14px;
   color: #1f2937;
   box-sizing: border-box;
   transition: all 0.3s ease-in-out;
@@ -84,25 +85,6 @@ input {
     box-shadow: 0 0 15px #03e9f4, 0 0 15px #03e9f4, 0 0 20px #03e9f4;
   }
 }
-.hidden {
-  display: none;
-}
-@keyframes animasi {
-  from {
-    transform: translateX(-30vh);
-    opacity: 0;
-  }
-  to {
-    transfrom: translateX(0vw);
-    opacity: 1;
-  }
-}
-
-.info {
-  animation: animasi 1s ease-out forwards;
-}
-
-
     </style>
 </head>
 <body>
@@ -129,17 +111,13 @@ input {
           </div>
         </div>
       </div>
-      <div id='info' class='info'>
-        <h4>Info:</h4>
-        <p>
-          Data cuaca ini diambil dari OpenWeatherMap, layanan daring yang menyediakan data cuaca global secara real-time, termasuk suhu, kelembapan, kecepatan angin, dan prakiraan cuaca. Data ini dihimpun dari berbagai sumber seperti satelit, radar, dan stasiun cuaca, kemudian disajikan melalui Application Programming Interface (API).
-        </p>
+      
+      <div id='icon-container'>
+        <img src='' id='icon'>
       </div>
     </div>
     
-    <div id='icon-container'>
-      <img src='' id='icon'>
-    </div>
+    
     
     <script>
       const APIKey = '5543b5ea4e8b53ccc330a1e2b4f80aa7'
@@ -153,7 +131,6 @@ const desc = document.getElementById('description');
 const humidity = document.getElementById('humidity');
 const windSpeed = document.getElementById('wind-speed');
 const weatherIcon = document.getElementById('icon');
-const info = document.getElementById('info');
 
 
 async function getData(cityName) {
@@ -177,7 +154,6 @@ async function getData(cityName) {
 }
 
 btn.addEventListener('click', function() {
-  info.classList.add('hidden');
   if (input.value.trim() !== '') {
     getData(input.value);
   } else {
@@ -191,6 +167,7 @@ input.addEventListener('keydown', function(event) {
   }
 });
 
+console.log('semoga author bisa juara LKS');
     </script>
 </body>
 </html>
