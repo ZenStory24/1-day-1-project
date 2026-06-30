@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="1 day 1 project(project: weather app)">
+    <meta name="author" content="rifqi">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather app(prototype)</title>
+    <style>
+      body {
+  background: linear-gradient(120deg, #b195ff 0%, #95e2ff);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+.card {
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 5px 10px 15px 5px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  height: 500px;
+}
+
+.icon-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  left: 110px;
+  bottom: 434px;
+}
+
+.searc {
+  margin: 20px;
+  display: flex;
+  padding: 10px;
+  height: 50px;
+  width: 250px;
+}
+
+#search-btn {
+  background-color: aqua;
+  position: absolute;
+  border: none;
+  border-radius: 4px;
+  width: 60px;
+  height: 25px;
+  left: 240px;
+  animation: glow-pulse 1.5s infinite alternate;
+}
+input {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  width: 180px;
+  height: 23px;
+  left: 50px;
+  position: absolute;
+}
+#search-input {
+  padding: 14px 18px;
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #1f2937;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+#search-input:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+  border-color: #4f46e5;
+}
+#search-input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+@keyframes glow-pulse {
+  0% {
+    box-shadow: 0 0 3px #03e9f4, 0 0 3px #03e9f4, 0 0 10px #03e9f4;
+  }
+  100% {
+    box-shadow: 0 0 15px #03e9f4, 0 0 15px #03e9f4, 0 0 20px #03e9f4;
+  }
+}
+.hidden {
+  display: none;
+}
+@keyframes animasi {
+  from {
+    transform: translateX(-30vh);
+    opacity: 0;
+  }
+  to {
+    transfrom: translateX(0vw);
+    opacity: 1;
+  }
+}
+
+.info {
+  animation: animasi 1s ease-out forwards;
+}
+
+
+    </style>
+</head>
+<body>
+
+    <div class='card'>
+      <div class='searc'>
+        <input id='search-input' type='text' placeholder='Masukkan nama kota...' spellcheck='false'>
+        <button id='search-btn'>Cari</button>
+      </div>
+      
+      <div class='weather' id='weather-info'>
+        <h2 class='city' id='city-name'>Kota</h2>
+        <h1 class='temp' id='temperature'>--°C</h1>
+        <p class='description' id='description'>Cerah</p>
+        <div class='details'>
+          <div class='col'>
+            <p>Kelembapan</p>
+            <p class='humidity' id='humidity'>--%</p>
+          </div>
+          
+          <div class='col'>
+            <p>Kecepatan angin</p>
+            <p class='wind' id='wind-speed'>--Km/h</p>
+          </div>
+        </div>
+      </div>
+      <div id='info' class='info'>
+        <h4>Info:</h4>
+        <p>
+          Data cuaca ini diambil dari OpenWeatherMap, layanan daring yang menyediakan data cuaca global secara real-time, termasuk suhu, kelembapan, kecepatan angin, dan prakiraan cuaca. Data ini dihimpun dari berbagai sumber seperti satelit, radar, dan stasiun cuaca, kemudian disajikan melalui Application Programming Interface (API).
+        </p>
+      </div>
+    </div>
+    
+    <div id='icon-container'>
+      <img src='' id='icon'>
+    </div>
+    
+    <script>
+      const APIKey = '5543b5ea4e8b53ccc330a1e2b4f80aa7'
+const url = 'https://api.openweathermap.org/data/2.5/weather?';
+
+const input = document.getElementById('search-input');
+const btn = document.getElementById('search-btn');
+const city = document.getElementById('city-name');
+const temp = document.getElementById('temperature');
+const desc = document.getElementById('description');
+const humidity = document.getElementById('humidity');
+const windSpeed = document.getElementById('wind-speed');
+const weatherIcon = document.getElementById('icon');
+const info = document.getElementById('info');
+
+
+async function getData(cityName) {
+  try {
+    const response = await fetch(url + 'q=' + cityName + '&appid=' + APIKey + '&units=metric');
+    if (response.status === 404) {
+      alert('Maaf kota tidak berhasil ditemukan');
+      return;
+    }
+    const data = await response.json();
+    const iconCode = data.weather[0].icon;
+    weatherIcon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+    city.innerHTML = data.name;
+    temp.innerHTML = Math.round(data.main.temp) +  '°C';
+    desc.innerHTML = data.weather[0].description;
+    humidity.innerHTML = data.main.humidity + '%';
+    windSpeed.innerHTML = data.wind.speed + 'Km/h';
+  } catch (error) {
+    console.log('Gagal mengambil data:', error);
+  }
+}
+
+btn.addEventListener('click', function() {
+  info.classList.add('hidden');
+  if (input.value.trim() !== '') {
+    getData(input.value);
+  } else {
+    alert('Mohon isi input terlebih dahulu');
+  }
+});
+
+input.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter' && input.value.trim() !== '') {
+    getData(input.value);
+  }
+});
+
+    </script>
+</body>
+</html>
