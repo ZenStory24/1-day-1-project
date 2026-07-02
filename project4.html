@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="1 day 1 project. project: game tebak angka">
+    <meta name="author" content="rifqi">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Game tebak angka</title>
+    <style>
+      .custom-dropdown {
+  position: absolute;
+  width: 150px;
+  font-family: Arial, sans-serif;
+  user-select: none;
+  top: 10px;
+  font-size: 14px;
+}
+
+.dropdown-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 0 0 5px 5px;
+}
+
+.dropdown-btn {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+
+.dropdown-options.show {
+  display: block;
+}
+
+.option {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: #e9e9e9;
+}
+
+
+
+body {
+  background: linear-gradient(120deg, #95fff5 0%, #6affe1);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.card {
+  width: 300px;
+  height: auto;
+  margin: 130px auto;
+  background: #2a2a2a;
+  border-radius: 8px;
+  animation: glow-pulse 1.5s infinite alternate;
+  padding: 15px;
+  text-align: center;
+}
+@keyframes glow-pulse {
+  0% {
+    box-shadow: 0 0 2px #03e9f4, 0 0 2px #03e9f4, 0 0 10px #03e9f4;
+  }
+  100% {
+    box-shadow: 0 0 20px #03e9f4, 0 0 25px #03e9f4, 0 0 20px #03e9f4;
+  }
+}
+
+h1 {
+  color: aqua;
+}
+p{
+  color: white;
+}
+h4 {
+  color: #3fffa1;
+}
+
+input {
+  width: 90px;
+  height: 25px;
+  border-radius: 5px;
+  border: none;
+  background-color: #7f7f7f;
+  font-align: center;
+}
+button {
+  height: 25px;
+  border-radius: 5px;
+  background-color: #6affcc;
+  border: none;
+  font-weight: bold;
+}
+.cara-main {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: block;
+}
+#caraMain {
+  background-color: #7fd6ff;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class='card'>
+      <h1>Tebak Angka Rahasia</h1>
+      <p id='limit'>Tebak angka 1 sampai 10!</p>
+      <input id='input' type='number' placeholder='Angka...'>
+      <button id='btn-tebak'>Tebak!</button>
+      <h4 id='teks'>Ayo mulai bermain!</h4>
+      <p>Percobaan:</p>
+      <p id='percobaan'>5</p>
+      <button id='btn-main'>Main lagi</button>
+    </div>
+    
+    <div class='custom-dropdown'>
+      <div class="dropdown-btn" id='dropdownBtn'>Pilih batas 1 sampai...</div>
+      <div class="dropdown-options" id="dropdownOptions">
+        <div class="option" data-value="10">1-10</div>
+        <div class="option" data-value="20">1-20</div>
+        <div class="option" data-value="30">1-30</div>
+        <div class="option" data-value="40">1-40</div>
+        <div class="option" data-value="50">1-50</div>
+        <div class="option" data-value="60">1-60</div>
+        <div class="option" data-value="70">1-70</div>
+        <div class="option" data-value="80">1-80</div>
+        <div class="option" data-value="90">1-90</div>
+        <div class="option" data-value="100">1-100</div>
+      </div>
+      <input type="hidden" name="framework" id="dropdownInput">
+      </div>
+    </div>
+    
+    <div class='cara-main'>
+      <button id='caraMain'>
+      Cara bermain
+      </button>
+    </div>
+    
+    
+    
+    
+    <script>
+      const input = document.getElementById('input');
+const btnTebak = document.getElementById('btn-tebak');
+const btnMain = document.getElementById('btn-main');
+const limit = document.getElementById('limit');
+const percobaan = document.getElementById('percobaan');
+const teks = document.getElementById('teks');
+const dropdownBtn = document.getElementById('dropdownBtn');
+const dropdownOptions = document.getElementById('dropdownOptions');
+const options = document.querySelectorAll('.option');
+const dropdownInput = document.getElementById('dropdownInput');
+const btnTutorial = document.getElementById('caraMain');
+
+
+let sisaPercobaan = 5;
+let angkaAcak = Math.floor(Math.random() * 10) + 1;
+
+
+
+function ambilAngkaAcak(batasAtas) {
+  return Math.floor(Math.random() * parseInt(batasAtas)) + 1;
+}
+
+
+
+input.addEventListener('click', function() {
+  if (input.value !== '') {
+    input.value = '';
+  }
+});
+
+
+
+dropdownBtn.addEventListener('click', () => {
+  dropdownOptions.classList.toggle('show');
+});
+
+
+
+options.forEach(option => {
+  option.addEventListener('click', (e) => {
+    const text = e.target.textContent;
+    const value = e.target.getAttribute('data-value');
+    
+    dropdownBtn.textContent = text;
+    dropdownInput.value = value;
+    dropdownOptions.classList.remove('show');
+    
+    limit.innerHTML = 'Tebak angka 1 sampai ' + value + '!';
+    
+    angkaAcak = ambilAngkaAcak(value);
+    console.log("Angka rahasia baru: " + angkaAcak);
+  });
+});
+
+
+
+btnTebak.addEventListener('click', function() {
+  if (sisaPercobaan <= 0) {
+    alert('Tidak dapat menebak! Sisa percobaan sudah habis.');
+    return;
+  }
+
+
+
+  if (input.value === '') {
+    alert('Masukkan angka tebakan terlebih dahulu!');
+    return;
+  }
+
+
+  sisaPercobaan -= 1;
+  percobaan.innerHTML = sisaPercobaan;
+
+
+
+  const tebakanUser = parseInt(input.value);
+
+  if (tebakanUser < angkaAcak) {
+    teks.innerHTML = 'Terlalu rendah';
+  } else if (tebakanUser > angkaAcak) {
+    teks.innerHTML = 'Terlalu tinggi';
+  } else {
+    teks.innerHTML = 'Benar! Angkanya adalah ' + angkaAcak;
+  }
+
+
+
+  if (sisaPercobaan === 0 && tebakanUser !== angkaAcak) {
+    teks.innerHTML = 'Game Over! Angka yang benar adalah ' + angkaAcak;
+  }
+});
+
+
+
+window.addEventListener('click', (e) => {
+  if (!e.target.closest('.custom-dropdown')) {
+    dropdownOptions.classList.remove('show');
+  }
+});
+
+
+
+btnMain.addEventListener('click', function() {
+  location.reload();
+});
+
+
+btnTutorial.addEventListener('click', function() {
+  alert('Selamat datang di game tebak angka! Cara mainnya sederhana, user memilih limit/batas lalu sistem otomatis mengambil angka random dari 1 sampai limit yang ditentukan user, kemudian angka tersebut harus ditebak oleh user dengan memasukkan angka tebakan ke dalam input dan menekan tombol tebak. Sistem akan memberi tahu apakah tebakan user terlalu tinggi/terlalu rendah/benar. Maksimal hanya bisa 5 kali percobaan.');
+});
+
+console.log('semoga author bisa juara LKS');
+    </script>
+</body>
+</html>
