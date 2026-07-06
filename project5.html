@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="1 day 1 project(project: QR Code Generator)">
+    <meta name="author" content="rifqi">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>QR Code Generator</title>
+    <style>
+      body {
+  font-family: sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.btn-pilih {
+  display: flex;
+}
+
+.pilih {
+  border: none;
+  border-radius: 8px;
+  width: 200px;
+  height: 100px;
+  margin: 6px;
+  transition: all 0.3s ease;
+  background-color: #a0a0a0;
+  color: white;
+  font-weight: bold;
+}
+
+.pilih:hover {
+box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+transform: translateY(-5px);
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+button {
+  border: none;
+  border-radius: 4px;
+  width: 100px;
+  height: 25px;
+}
+
+#qr-code img {
+  border-radius: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  position: relative;
+  margin: 5px auto;
+}
+
+.gtau {
+    position: relative;
+    padding: 5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px;
+    text-align: center;
+    font-weight: bold;
+    font-family: sans-serif;
+    color: white;
+}
+
+input {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 100px;
+  height: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+input:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+  border-color: #4f46e5;
+}
+
+#back {
+  bottom: 30px;
+  position: absolute;
+}
+
+@keyframes bruhh {
+  from {
+    transform: translateY(10vh);
+    opacity: 0;
+  } to {
+    transform: translateY(0vw);
+    opacity: 1;
+  }
+}
+
+#info {
+  animation: bruhh 1s ease-out forwards;
+}
+
+#apalah {
+  width: 50px;
+  padding: 10px;
+  height: auto;
+}
+    </style>
+</head>
+<body>
+
+    <div id='main-slide'>
+      <h1>QR Code Generator</h1>
+      <h3>Disini anda bisa membuat QR Code anda sendiri dengan cepat dan gratis!</h5>
+      <h5>Pilih isi QR Code anda:</h5>
+      <div class='btn-pilih'>
+        <button class='pilih' id='btn-to-url-upload'>Upload URL</button>
+        <button class='pilih' id='btn-to-img-upload'>Upload gambar</button>
+      </div>
+      <h5>Buat judul yang akan ditempel di atas QR Code(opsional):</h5>
+      <input id='input-judul' type='text' placeholder='Isi disini...'>
+    </div>
+    
+    <div class='hidden' id='url-upload'>
+      <p>Masukkan Link anda disini:</p>
+      <input id='input' placeholder='https://' type='text'>
+      <button id='btn-create1'>Buat QR Code</button>
+    </div>
+    
+    <div class='hidden' id='img-upload'>
+      <h3>Pilih file:</h3>
+      <div id='apalah'>
+        <input id='input-file' type='file' accept='image/*'>
+        <button id='btn-create2'>Buat QR Code</button>
+      </div>
+      <div id='info'>
+      <h5>Info</h5>
+      <p>File gambar yang anda upload akan dikirim ke Catbox.moe, platform layanan hosting dan berbagi berkas (file) di internet. Artinya file anda dapat dilihat oleh publik(Tidak terkecuali bagi yang tidak memiliki link/QR Code).
+      </p>
+      </div>
+    </div>
+    
+    <div class='hidden' id='preview-slide'>
+      <h2>QR Code anda sudah siap!</h4>
+      <div class='gtau'>
+        <h3 id='judul'></h3>
+        <div id='qr-code'></div>
+      </div>
+      <button id='back'>Buat lagi</button>
+    </div>
+    
+    
+    
+    <script>
+      const mainSlide = document.getElementById('main-slide');
+const btnToImgSlide = document.getElementById('btn-to-img-upload');
+const btnToUrlSlide = document.getElementById('btn-to-url-upload');
+const urlSlide = document.getElementById('url-upload');
+const input = document.getElementById('input');
+const btnCreate1 = document.getElementById('btn-create1');
+const imgSlide = document.getElementById('img-upload');
+const inputFile = document.getElementById('input-file');
+const btnCreate2 = document.getElementById('btn-create2');
+const preview = document.getElementById('qr-code');
+const previewSlide = document.getElementById('preview-slide');
+const btnBack = document.getElementById('back');
+const judul = document.getElementById('judul');
+const inputJudul = document.getElementById('input-judul');
+
+
+const swapToUrlSlide = () => {
+  mainSlide.classList.add('hidden');
+  urlSlide.classList.remove('hidden');
+}
+
+const swapToImgSlide = () => {
+  mainSlide.classList.add('hidden');
+  imgSlide.classList.remove('hidden');
+}
+
+const swapToPreview = ()  => {
+  urlSlide.classList.add('hidden');
+  imgSlide.classList.add('hidden');
+  previewSlide.classList.remove('hidden');
+}
+
+
+
+btnToImgSlide.addEventListener('click', function() {
+  swapToImgSlide();
+});
+
+btnToUrlSlide.addEventListener('click', function() {
+  swapToUrlSlide();
+});
+
+
+
+btnCreate1.addEventListener('click', function() {
+  if (input.value.trim() !== '') {
+    try {
+      new QRCode(preview, input.value);
+      swapToPreview();
+      judul.innerHTML = inputJudul.value;
+    } catch (error) {
+      alert('URL tidak ditemukan');
+    }
+  } else {
+    alert('Silahkan masukkan link terlebih dahulu');
+  }
+});
+
+btnCreate2.addEventListener('click', async function() {
+  const fileGambar = inputFile.files[0]; 
+  if (!fileGambar) {
+  alert('Tidak ada file dipilih');
+  return;
+  }
+
+  const paket = new FormData();
+  paket.append('reqtype', 'fileupload');
+  paket.append('fileToUpload', fileGambar);
+
+  try {
+  const responRaw = await fetch('https://catbox.moe/user/api.php', {
+    method: 'POST',
+    body: paket
+  });
+
+  const linkGambar = await responRaw.text(); 
+  console.log(linkGambar);
+  swapToPreview();
+  new QRCode(preview, linkGambar.trim());
+  judul.innerHTML = inputJudul.value;
+  
+  } catch (error) {
+  alert("Gagal mengunggah file, mohon cek koneksi internet anda");
+  }
+});
+
+
+btnBack.addEventListener('click', function() {
+  location.reload();
+});
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</body>
+</html>
