@@ -98,7 +98,7 @@ input:focus {
   }
 }
 
-#info {
+#info1, #info2 {
   animation: bruhh 1s ease-out forwards;
 }
 
@@ -135,10 +135,14 @@ input:focus {
         <input id='input-file' type='file' accept='image/*'>
         <button id='btn-create2'>Buat QR Code</button>
       </div>
-      <div id='info'>
+      <div id='info1'>
       <h5>Info</h5>
       <p>File gambar yang anda upload akan dikirim ke Catbox.moe, platform layanan hosting dan berbagi berkas (file) di internet. Artinya file anda dapat dilihat oleh publik(Tidak terkecuali bagi yang tidak memiliki link/QR Code).
       </p>
+      </div>
+      <div id='info2' class='hidden'>
+        <h5>Info</h5>
+        <p>Sedang mengupload, mohon tunggu sebentar.</p>
       </div>
     </div>
     
@@ -168,6 +172,8 @@ const previewSlide = document.getElementById('preview-slide');
 const btnBack = document.getElementById('back');
 const judul = document.getElementById('judul');
 const inputJudul = document.getElementById('input-judul');
+const info1 = document.getElementById('info1');
+const info2 = document.getElementById('info2');
 
 
 const swapToUrlSlide = () => {
@@ -180,10 +186,15 @@ const swapToImgSlide = () => {
   imgSlide.classList.remove('hidden');
 }
 
-const swapToPreview = ()  => {
+const swapToPreview = () => {
   urlSlide.classList.add('hidden');
   imgSlide.classList.add('hidden');
   previewSlide.classList.remove('hidden');
+}
+
+const swapInfo = () => {
+  info1.classList.add('hidden');
+  info2.classList.remove('hidden');
 }
 
 
@@ -218,7 +229,7 @@ btnCreate2.addEventListener('click', async function() {
   alert('Tidak ada file dipilih');
   return;
   }
-
+  swapInfo();
   const paket = new FormData();
   paket.append('reqtype', 'fileupload');
   paket.append('fileToUpload', fileGambar);
