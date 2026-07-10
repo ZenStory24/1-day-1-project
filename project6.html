@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="rifqi">
+    <meta name="description" content="1 day 1 project(project: pixel art canvas grid)">
+    <title>Pixel Art Canvas Grid Generator</title>
+    <style>
+      * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  padding: 20px;
+  background-color: #f5f5f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.input-panel {
+  display: flex;
+  gap: 10px;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.input-panel input {
+  padding: 8px;
+  width: 80px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input-panel button {
+  padding: 8px 16px;
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.input-panel button:hover {
+  background-color: #0055FF;
+}
+
+.main-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+#canvas {
+  background: white;
+  border: 2px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.row {
+  display: flex;
+}
+
+.pixel {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #e0e0e0;
+  cursor: crosshair;
+}
+
+.pixel:hover {
+  filter: brightness(0.9);
+}
+
+.container-color {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
+#view img, #unview img {
+  width: 40px;
+  height: auto;
+}
+
+#view {
+  background-color: white;
+}
+
+#unview {
+  background-color: white;
+  display: none;
+}
+    </style>
+</head>
+<body>
+    
+    <div id='inputpanel' class='input-panel'>
+      <input type='number' id='input1' placeholder='Tinggi'>
+      <input type='number' id='input2' placeholder='Lebar'>
+      <button id='btn-create'>Buat Grid</button>
+      <button id='view'>
+        <img src='https://i.imgur.com/b5S08W6.jpeg'>
+      </button>
+    </div>
+    
+    <div class='main-layout'>
+      <div id='canvas'></div> 
+    
+      <div id='containercolor' class='container-color'>
+        <!-- button color: red -->
+        <button class='btn' data-color='#FF3B30' style='background-color: #FF3B30;'></button>
+        <button class='btn' data-color='#E60000' style='background-color: #E60000;'></button>
+        <button class='btn' data-color='#B30000' style='background-color: #B30000;'></button>
+    
+        <!-- button color: orange -->
+        <button class='btn' data-color='#FF9500' style='background-color: #FF9500;'></button>
+        <button class='btn' data-color='#FF7300' style='background-color: #FF7300;'></button>
+        <button class='btn' data-color='#CC5C00' style='background-color: #CC5C00;'></button>
+    
+        <!-- button color: yellow -->
+        <button class='btn' data-color='#FFCC00' style='background-color: #FFCC00;'></button>
+        <button class='btn' data-color='#FFD633' style='background-color: #FFD633;'></button>
+        <button class='btn' data-color='#CCA300' style='background-color: #CCA300;'></button>
+    
+        <!-- button color: green -->
+        <button class='btn' data-color='#34C759' style='background-color: #34C759;'></button>
+        <button class='btn' data-color='#00FF00' style='background-color: #00FF00;'></button>
+        <button class='btn' data-color='#248A3D' style='background-color: #248A3D;'></button>
+        <button class='btn' data-color='#11401D' style='background-color: #11401D;'></button>
+    
+        <!-- button color: blue -->
+        <button class='btn' data-color='#007AFF' style='background-color: #007AFF;'></button>
+        <button class='btn' data-color='#0055FF' style='background-color: #0055FF;'></button>
+        <button class='btn' data-color='#003399' style='background-color: #003399;'></button>
+    
+        <!-- button color: indigo -->
+        <button class='btn' data-color='#5856D6' style='background-color: #5856D6;'></button>
+        <button class='btn' data-color='#4B0082' style='background-color: #4B0082;'></button>
+        <button class='btn' data-color='#310054' style='background-color: #310054;'></button>
+    
+        <!-- button color: purple -->
+        <button class='btn' data-color='#AF52DE' style='background-color: #AF52DE;'></button>
+        <button class='btn' data-color='#800080' style='background-color: #800080;'></button>
+        <button class='btn' data-color='#4A004A' style='background-color: #4A004A;'></button>
+    
+        <!-- button color: netral -->
+        <button class='btn' data-color='#FFFFFF' style='background-color: #FFFFFF;'></button>
+        <button class='btn' data-color='#8E8E93' style='background-color: #8E8E93;'></button>
+        <button class='btn' data-color='#1C1C1E' style='background-color: #1C1C1E;'></button>
+      </div>
+    </div>
+    
+    <button id='unview'>
+      <img src='https://i.imgur.com/b5S08W6.jpeg'>
+    </button>
+    
+    <script>
+      const input1 = document.getElementById('input1');
+const input2 = document.getElementById('input2');
+const btnCreate = document.getElementById('btn-create');
+const canvas = document.getElementById('canvas');
+const btnColor = document.querySelectorAll('.btn');
+const inputPanel = document.getElementById('inputpanel');
+const container = document.getElementById('containercolor');
+const view = document.getElementById('view');
+const unview = document.getElementById('unview');
+
+let activeColor = 'black';
+
+const moveToView = () => {
+  inputPanel.style.display = 'none';
+  container.style.display = 'none';
+  unview.style.display = 'block';
+}
+
+const moveToUnview = () => {
+  inputPanel.style.display = 'block';
+  container.style.display = 'block';
+  unview.style.display = 'none';
+}
+
+view.addEventListener('click', function() {
+  moveToView();
+});
+
+unview.addEventListener('click', function() {
+  moveToUnview();
+});
+
+btnColor.forEach(function(button) {
+  button.addEventListener('click', function() {
+    activeColor = button.getAttribute('data-color');
+  });
+});
+
+btnCreate.addEventListener('click', function() {
+  canvas.innerHTML = '';
+  let value1 = Number(input1.value.trim());
+  let value2 = Number(input2.value.trim());
+  
+  for (let i = 0; i < value1; i++) {
+    let row = document.createElement('div');
+    for (let j = 0; j < value2; j++) {
+      let pixel = document.createElement('div');
+      row.appendChild(pixel);
+      row.classList.add('row');
+      pixel.classList.add('pixel');
+      
+      pixel.addEventListener('click', function() {
+        pixel.style.backgroundColor = activeColor;
+      });
+    }
+    canvas.appendChild(row);
+  }  
+});
+
+console.log('semoga author bisa juara LKS');
+    </script>
+</body>
+</html>
