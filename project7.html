@@ -127,33 +127,33 @@ button:active {
         transform: translateY(0); 
     }
 }
-
-.btn-container {
-  position: absolute;
-  bottom: -200px;
-}
     </style>
 </head>
 <body>
     
     <div id='main-slide'>
-      <h3>Game Menghitung Cepat!</h3>
-      
-      <input id='input-timer' placeholder='Isi Timer (Detik)...' type='number' min="1" max="15">
-      <button id='start-button'>Mulai Permainan</button>
-      
-      <div id='number'>- - -</div>
-      
-      <input id='answer-input' placeholder='Ketik Hasil Jawaban...' type='number'>
-      <div>
-          <div id='timer'>0</div>
-      </div>
-    </div>
+  <h3>Game Menghitung Cepat!</h3>
+  
+  <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+    Uji seberapa cepat otakmu berpikir! Game ini dirancang khusus untuk melatih <strong>mental agility</strong> (ketangkasan mental) melalui tantangan matematika di bawah tekanan waktu.
+  </p>
+  
+  <input id='input-timer' placeholder='Isi Timer (Detik)...' type='number' min="1" max="15">
+  <button id='start-button'>Mulai!</button>
+  
+  <div id='number'>- - -</div>
+  
+  <input id='answer-input' placeholder='Hasil' type='number'>
+  <div id='timer'>0</div>
 
-    <div class='btn-container'>
-      <button id='btn1'>Tentang Game Ini</button>
-      <button id='btn2'>Cara Bermain</button>
-    </div>
+  <div style="text-align: left; margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border-color); font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+    <strong style="color: var(--text-main); display: block; margin-bottom: 5px;">Cara Bermain:</strong>
+    • Tentukan durasi per soal (maksimal 15 detik) lalu klik Mulai.<br>
+    • Ketik jawaban lalu tekan <strong>Enter</strong> untuk ke soal berikutnya.<br>
+    • Jika timer habis, soal otomatis terlewati.<br>
+    • Selesaikan 15 soal acak untuk melihat grafik evaluasi latihanmu!
+  </div>
+</div>
     
     <div class='hidden' id='result-slide'>
       <h3>Hasil Latihan Kamu</h3>
@@ -170,9 +170,6 @@ const answer = document.getElementById('answer-input');
 const resultSlide = document.getElementById('result-slide');
 const timer = document.getElementById('timer');
 const myChart = document.getElementById('myChart');
-const btn1 = document.getElementById('btn1');
-const btn2 = document.getElementById('btn2');
-
 
 let indexQuestion = 0;
 let countdown;
@@ -301,15 +298,6 @@ const nextQuestion = () => {
     swapToResult();
   }
 }
-
-btn1.addEventListener('click', function() {
-  alert('Uji seberapa cepat otakmu berpikir! Game ini dirancang khusus untuk melatih mental agility (ketangkasan mental) dan fokus kamu melalui tantangan matematika dasar di bawah tekanan waktu. Berani terima tantangannya?');
-});
-
-btn2.addEventListener('click', function() {
-  const teks = 'Atur Waktu: Isi kolom timer untuk menentukan durasi berpikirmu per soal (maksimal 15 detik), lalu klik Mulai! Jawab Cepat: Ketik jawabanmu pada kolom yang disediakan. Tekan Enter pada keyboard untuk langsung lanjut ke soal berikutnya. Awas Waktu Habis! Jika timer mencapai angka 0 sebelum kamu menjawab, soal akan otomatis terlewati dan dianggap tidak dijawab. Lihat Hasil: Selesaikan total 15 soal (penjumlahan, pengurangan, dan perkalian acak) untuk melihat grafik evaluasi ketangkasanmu di akhir permainan!'
-  alert(teks);
-});
 
 startBtn.addEventListener('click', function() {
   limitTimer();
