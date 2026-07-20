@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="rifqi">
+    <meta name="description" content="Selamat datang di Game Menghitung Cepat! -> Proyek aplikasi berbasis web ini dirancang khusus sebagai sarana interaktif untuk melatih mental agility (ketangkasan mental) dan kecepatan berpikir melalui tantangan matematika dasar. Bagaimana aplikasi ini bekerja? Aplikasi ini secara otomatis menghasilkan bank soal acak yang terdiri dari operasi penjumlahan, pengurangan, dan perkalian. Pengguna dituntut untuk menyelesaikan total 15 soal di bawah tekanan batas waktu (time constraint) yang dapat disesuaikan sendiri.">
+    <title>Math Blitz: 15 Seconds Challenge</title>
+    <style>
+      :root {
+    --bg-color: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+    --primary: #3498db;
+    --primary-hover: #2980b9;
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --border-color: #dcdde1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+#main-slide, #result-slide {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+    animation: fadeIn 0.4s ease-out;
+}
+
+h3 {
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+input[type='number'] {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+    text-align: center;
+}
+
+input[type='number']:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.15);
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#number {
+    font-size: 46px;
+    font-weight: 700;
+    margin: 25px 0;
+    color: var(--text-main);
+    letter-spacing: 1px;
+}
+
+#timer {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 15px;
+    color: var(--danger);
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.btn-container {
+  position: absolute;
+  bottom: -200px;
+}
+    </style>
+</head>
+<body>
+    
+    <div id='main-slide'>
+      <h3>Game Menghitung Cepat!</h3>
+      
+      <input id='input-timer' placeholder='Isi Timer (Detik)...' type='number' min="1" max="15">
+      <button id='start-button'>Mulai Permainan</button>
+      
+      <div id='number'>- - -</div>
+      
+      <input id='answer-input' placeholder='Ketik Hasil Jawaban...' type='number'>
+      <div>
+          <div id='timer'>0</div>
+      </div>
+    </div>
+
+    <div class='btn-container'>
+      <button id='btn1'>Tentang Game Ini</button>
+      <button id='btn2'>Cara Bermain</button>
+    </div>
+    
+    <div class='hidden' id='result-slide'>
+      <h3>Hasil Latihan Kamu</h3>
+      <canvas id="myChart" width="300" height="300"></canvas>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const mainSlide = document.getElementById('main-slide');
+const inputTimer = document.getElementById('input-timer');
+const startBtn = document.getElementById('start-button');
+const number = document.getElementById('number');
+const answer = document.getElementById('answer-input');
+const resultSlide = document.getElementById('result-slide');
+const timer = document.getElementById('timer');
+const myChart = document.getElementById('myChart');
+const btn1 = document.getElementById('btn1');
+const btn2 = document.getElementById('btn2');
+
+
+let indexQuestion = 0;
+let countdown;
+let timeleft;
+let questionData = [];
+
+const takeRandomNumber = (maksimal) => Math.floor(Math.random() * maksimal) + 1;
+
+const loop1 = () => {
+  for (let i = 0; i < 5; i++) {
+    const n1 = takeRandomNumber(100);
+    const n2 = takeRandomNumber(100);
+    const result = n1 + n2;
+    questionData.push({ number1: n1, number2: n2, operator: '+', answerKey: result, answer: null });
+  }
+}
+
+const loop2 = () => {
+  for (let i = 0; i < 5; i++) {
+    const n1 = takeRandomNumber(100);
+    const n2 = takeRandomNumber(100);
+    const result = n1 - n2;
+    questionData.push({ number1: n1, number2: n2, operator: '-', answerKey: result, answer: null });
+  }
+}
+
+const loop3 = () => {
+  for (let i = 0; i < 5; i++) {
+    const n1 = takeRandomNumber(50);
+    const n2 = takeRandomNumber(50);
+    const result = n1 * n2;
+    questionData.push({ number1: n1, number2: n2, operator: '*', answerKey: result, answer: null });
+  }
+}
+
+const startTimer = () => {
+  clearInterval(timeleft); 
+  
+  countdown = Number(inputTimer.value.trim());
+  timer.innerHTML = countdown;
+  
+  timeleft = setInterval(function() {
+    countdown--;
+    timer.innerHTML = countdown;
+    if (countdown <= 0) {
+      clearInterval(timeleft);
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+const swapToResult = () => {
+  mainSlide.classList.add('hidden');
+  resultSlide.classList.remove('hidden');
+  
+  let True = 0;
+  let False = 0;
+  let Unanswered = 0;
+  
+  for (let i = 0; i < questionData.length; i++) {
+    const currentAns = questionData[i].answer;
+    const key = questionData[i].answerKey;
+    
+    if (currentAns === null || currentAns === '') {
+      Unanswered++;
+    } else if (Number(currentAns) === key) {
+      True++;
+    } else {
+      False++;
+    }
+  }
+  
+  new Chart(myChart, {
+    type: 'pie',
+    data: {
+      labels: ['Benar', 'Salah', 'Tidak Dijawab'],
+      datasets: [{
+        label: 'Hasil Latihan',
+        data: [True, False, Unanswered],
+        backgroundColor: ['#4CAF50', '#F44336', '#9E9E9E'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+}
+
+const showQuestion = () => {
+  const activeQuestion = questionData[indexQuestion];
+  const teks = `${activeQuestion.number1} ${activeQuestion.operator} ${activeQuestion.number2}`;
+  number.innerHTML = teks;
+}
+
+const limitTimer = () => {
+  const timerVal = inputTimer.value.trim();
+  
+  if (timerVal === '') {
+    alert('Mohon isi input timer terlebih dahulu');
+  } else if (Number(timerVal) > 15) {
+    alert('Timer terlalu besar (Maksimal 15 detik)');
+  } else {
+    questionData = [];
+    indexQuestion = 0;
+    
+    loop1();
+    loop2();
+    loop3();
+    showQuestion();
+    startTimer();
+  }
+}
+
+const nextQuestion = () => {
+  clearInterval(timeleft); 
+  
+  questionData[indexQuestion].answer = answer.value;
+  answer.value = '';
+  indexQuestion++;
+  
+  if (indexQuestion < 15) {
+    showQuestion();
+    startTimer();
+  } else {
+    swapToResult();
+  }
+}
+
+btn1.addEventListener('click', function() {
+  alert('Uji seberapa cepat otakmu berpikir! Game ini dirancang khusus untuk melatih mental agility (ketangkasan mental) dan fokus kamu melalui tantangan matematika dasar di bawah tekanan waktu. Berani terima tantangannya?');
+});
+
+btn2.addEventListener('click', function() {
+  const teks = 'Atur Waktu: Isi kolom timer untuk menentukan durasi berpikirmu per soal (maksimal 15 detik), lalu klik Mulai! Jawab Cepat: Ketik jawabanmu pada kolom yang disediakan. Tekan Enter pada keyboard untuk langsung lanjut ke soal berikutnya. Awas Waktu Habis! Jika timer mencapai angka 0 sebelum kamu menjawab, soal akan otomatis terlewati dan dianggap tidak dijawab. Lihat Hasil: Selesaikan total 15 soal (penjumlahan, pengurangan, dan perkalian acak) untuk melihat grafik evaluasi ketangkasanmu di akhir permainan!'
+  alert(teks);
+});
+
+startBtn.addEventListener('click', function() {
+  limitTimer();
+  console.log('semoga author bisa juara LKS!');
+});
+    </script>
+</body>
+</html>
